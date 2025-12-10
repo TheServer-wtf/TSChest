@@ -6,4 +6,7 @@ commands:
   tschest:
     usage: /tschest
     description: get a key that allows you to open chests for players
-    permission: tsc
+    permission: tschest.use
+permissions:
+  tschest.use:
+    default: op

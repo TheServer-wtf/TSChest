@@ -24,6 +24,6 @@ public class tschest implements CommandExecutor {
         meta.setDisplayName("Chest Key");
         key.setItemMeta(meta);
         p.getInventory().addItem(key);
-        return false;
+        return true;
     }
 }
