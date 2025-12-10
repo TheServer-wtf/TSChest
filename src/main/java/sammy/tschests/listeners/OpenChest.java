@@ -59,39 +59,23 @@ public class OpenChest implements Listener {
         ItemStack i = p.getInventory().getItemInMainHand();
         if(b != null) {
             if (ischest.get(b.getType()) != null) {
-                if(p.isOp()){
+                if(p.hasPermission("tschest.use")){
                     if(i.hasItemMeta()){
-                        if(cooldown.containsKey(p.getName())) {
-                            double incooldown = ((cooldown.get(p.getName())/1000)+1) - (System.currentTimeMillis()/1000);
-                                if (i.getItemMeta().getDisplayName().equalsIgnoreCase("Chest Key")) {
-                                    if(incooldown < 0) {
-                                        Boolean exists = plugin.getConfig().getBoolean(b.getX() + "-" + b.getY() + "-" + b.getZ());
-                                        if (exists) {
-                                            plugin.getConfig().set(b.getX() + "-" + b.getY() + "-" + b.getZ(), false);
-                                            p.sendMessage(ChatColor.RED + "LOCKED!");
-                                        } else {
-                                            plugin.getConfig().set(b.getX() + "-" + b.getY() + "-" + b.getZ(), true);
-                                            p.sendMessage(ChatColor.GREEN + "UNLOCKED!");
-                                        }
-                                        plugin.saveConfig();
-                                        event.setCancelled(true);
-                                        cooldown.put(p.getName(), System.currentTimeMillis());
-                                    }
-                                    else event.setCancelled(true);
-                                }
-                        }
-                        else{
-                            Boolean exists = plugin.getConfig().getBoolean(b.getX() + "-" + b.getY() + "-" + b.getZ());
-                            if (exists) {
-                                plugin.getConfig().set(b.getX() + "-" + b.getY() + "-" + b.getZ(), false);
-                                p.sendMessage(ChatColor.RED + "LOCKED!");
-                            } else {
-                                plugin.getConfig().set(b.getX() + "-" + b.getY() + "-" + b.getZ(), true);
-                                p.sendMessage(ChatColor.GREEN + "UNLOCKED!");
-                            }
-                            plugin.saveConfig();
+                        double incooldown = ((cooldown.getOrDefault(p.getName(),0L)/1000L)+1L) - (System.currentTimeMillis()/1000);
+                        if (i.getItemMeta().getDisplayName().equalsIgnoreCase("Chest Key")) {
                             event.setCancelled(true);
-                            cooldown.put(p.getName(), System.currentTimeMillis());
+                            if(incooldown < 0) {
+                                Boolean exists = plugin.getConfig().getBoolean(b.getX() + "-" + b.getY() + "-" + b.getZ());
+                                if (exists) {
+                                    plugin.getConfig().set(b.getX() + "-" + b.getY() + "-" + b.getZ(), false);
+                                    p.sendMessage(ChatColor.RED + "LOCKED!");
+                                } else {
+                                    plugin.getConfig().set(b.getX() + "-" + b.getY() + "-" + b.getZ(), true);
+                                    p.sendMessage(ChatColor.GREEN + "UNLOCKED!");
+                                }
+                                plugin.saveConfig();
+                                cooldown.put(p.getName(), System.currentTimeMillis());
+                            }
                         }
                     }
                 }
